@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test-app-deployment-sidecar-api-go
+  name: test-app-deployment-sidecar-api-go
+spec:
+  selector:
+    matchLabels:
+      app: test-app-deployment-sidecar-api-go
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: test-app-deployment-sidecar-api-go
+    spec:
+      serviceAccountName: authn-k8s-sa
+      containers:
+        - name: test-app-deployment-sidecar-api-go
+          image: quasys.jfrog.io/conjur-docker/test-app-go:0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONJUR_SECRET_DB_PASSWORD
+              value: "This is critical secret value e.g. Password123"

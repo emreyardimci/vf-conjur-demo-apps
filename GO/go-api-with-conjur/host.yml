@@ -1,0 +1,19 @@
+	
+- !host
+  id: test-app-deployment-sidecar-api-go
+  annotations:
+    authn-k8s/namespace: conjur-testapps
+    authn-k8s/service-account: authn-k8s-sa
+   
+- !grant
+  roles:
+  - !group conjur/authn-k8s/event-cluster/consumers
+  members:
+  - !host test-app-deployment-sidecar-api-go
+  
+- !variable secret/conjur-safe/db-passwords
+
+- !permit
+    role: !host test-app-deployment-sidecar-api-go
+    privilege: [ read, execute ]
+    resource: !variable secret/conjur-safe/db-passwords
